@@ -1,0 +1,32 @@
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]serSettings/
+
+# Visual Studio ve VS Code tarafından oluşturulan dosyalar
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity tarafından otomatik oluşturulan diğer dosyalar
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db
