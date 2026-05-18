@@ -46,52 +46,100 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         if (eventData.eligibleForClick || eventData.dragging) { Etkilesim(); }
     }
 
-  void Etkilesim()
-{
-    if (islemGordu || GameManager.instance == null) return;
-    var arac = GameManager.instance.seciliArac;
-    var asama = GameManager.instance.mevcutAsama;
-
-    bool dogruKullanim = false;
-
-    if (asama == GameManager.BahceAsamasi.TirmikAsamasi && arac == GameManager.AracTipi.Tirmik) dogruKullanim = true;
-    else if (asama == GameManager.BahceAsamasi.TohumAsamasi && arac == GameManager.AracTipi.Tohum) 
+    void Etkilesim()
     {
-        // Eğer oyuncu parşömenden bir renk seçmişse işlemi kabul et!
-        if (GameManager.instance.seciliTohum != CicekTuru.Hicbiri)
+        if (islemGordu || GameManager.instance == null) return;
+
+        // YENİ: Geri al butonunun çalışabilmesi için son etkileşime girilen tarlayı GameManager'a bildiriyoruz
+        GameManager.instance.SonHamleyiKaydet(this);
+
+        var arac = GameManager.instance.seciliArac;
+        var asama = GameManager.instance.mevcutAsama;
+
+        bool dogruKullanim = false;
+
+        if (asama == GameManager.BahceAsamasi.TirmikAsamasi && arac == GameManager.AracTipi.Tirmik) dogruKullanim = true;
+        else if (asama == GameManager.BahceAsamasi.TohumAsamasi && arac == GameManager.AracTipi.Tohum) 
         {
-            dogruKullanim = true;
-            
-            // 1. Tarlanın hafızasına ektiğimiz çiçeği yazalım
-            uzerindekiCicek = GameManager.instance.seciliTohum;
-
-            // 2. Çiçek görselini hazırla
-            GorseliAyarla(uzerindekiCicek);
-
-            // 3. LevelManager ve UIManager'a haber ver, parşömendeki sayılar güncellensin
-            if (LevelManager.instance != null && UIManager.instance != null)
+            // Eğer oyuncu parşömenden bir renk seçmişse işlemi kabul et!
+            if (GameManager.instance.seciliTohum != CicekTuru.Hicbiri)
             {
-                LevelManager.instance.ekilenler[uzerindekiCicek]++;
-                UIManager.instance.ParsomeniGuncelle();
+                dogruKullanim = true;
+                
+                // 1. Tarlanın hafızasına ektiğimiz çiçeği yazalım
+                uzerindekiCicek = GameManager.instance.seciliTohum;
+
+                // 2. Çiçek görselini hazırla
+                GorseliAyarla(uzerindekiCicek);
+
+                // 3. LevelManager ve UIManager'a haber ver, parşömendeki sayılar güncellensin
+                if (LevelManager.instance != null && UIManager.instance != null)
+                {
+                    LevelManager.instance.ekilenler[uzerindekiCicek]++;
+                    UIManager.instance.ParsomeniGuncelle();
+                }
             }
         }
-    }
-    else if (asama == GameManager.BahceAsamasi.SuAsamasi && arac == GameManager.AracTipi.Su) dogruKullanim = true;
-    else if (asama == GameManager.BahceAsamasi.HasatAsamasi && arac == GameManager.AracTipi.Hasat) dogruKullanim = true;
+        else if (asama == GameManager.BahceAsamasi.SuAsamasi && arac == GameManager.AracTipi.Su) dogruKullanim = true;
+        else if (asama == GameManager.BahceAsamasi.HasatAsamasi && arac == GameManager.AracTipi.Hasat) dogruKullanim = true;
 
-    if (dogruKullanim)
-    {
-        islemGordu = true; 
-        tarlaResmi.color = new Color(0.8f, 0.8f, 0.8f); 
-
-        if (asama == GameManager.BahceAsamasi.HasatAsamasi && cicekGorseli != null) 
+        if (dogruKullanim)
         {
-            cicekGorseli.color = new Color(0.8f, 0.8f, 0.8f);
-        }
+            islemGordu = true; 
+            tarlaResmi.color = new Color(0.8f, 0.8f, 0.8f); 
 
-        GameManager.instance.TarlayaTiklandi(); 
+            if (asama == GameManager.BahceAsamasi.HasatAsamasi && cicekGorseli != null) 
+            {
+                cicekGorseli.color = new Color(0.8f, 0.8f, 0.8f);
+            }
+
+            GameManager.instance.TarlayaTiklandi(); 
+        }
     }
-}
+
+    // YENİ: GameManager içerisinden "Geri Al" basıldığında bu tarlanın durumunu bir önceki aşamaya döndüren fonksiyon
+    public void HamleyiGeriSar(GameManager.BahceAsamasi asama)
+    {
+        // Tarlanın işlem görme kilidini açıyoruz ve rengini normale döndürüyoruz
+        islemGordu = false;
+        tarlaResmi.color = Color.white;
+
+        if (asama == GameManager.BahceAsamasi.TirmikAsamasi)
+        {
+            // Tırmıklamayı geri alıyorsak ham tırpılanmamış toprağa geri döner
+            tarlaResmi.sprite = tirmiklanmamisResim;
+        }
+        else if (asama == GameManager.BahceAsamasi.TohumAsamasi)
+        {
+            // Tohum ekmeyi geri alıyorsak tırmıklanmış boş toprağa geri döner
+            tarlaResmi.sprite = tirmiklanmisResim;
+
+            // Yanlış ekilen tohumu listelerden ve UI parşömenden düşüyoruz
+            if (uzerindekiCicek != CicekTuru.Hicbiri)
+            {
+                if (LevelManager.instance != null && LevelManager.instance.ekilenler.ContainsKey(uzerindekiCicek))
+                {
+                    if (LevelManager.instance.ekilenler[uzerindekiCicek] > 0)
+                    {
+                        LevelManager.instance.ekilenler[uzerindekiCicek]--;
+                    }
+                }
+                
+                if (UIManager.instance != null)
+                {
+                    UIManager.instance.ParsomeniGuncelle();
+                }
+            }
+
+            uzerindekiCicek = CicekTuru.Hicbiri;
+            if (cicekGorseli != null) cicekGorseli.gameObject.SetActive(false);
+        }
+        else if (asama == GameManager.BahceAsamasi.SuAsamasi)
+        {
+            // Sulamayı geri alıyorsak sadece tohumlu kuru toprak görseline geri döner
+            tarlaResmi.sprite = tohumluResim;
+        }
+    }
 
     public void DalgaUlasti()
     {

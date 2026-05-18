@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     [Header("Mira'nın Reçetesi")]
     public Dictionary<CicekTuru, int> recete = new Dictionary<CicekTuru, int>();
     public Dictionary<CicekTuru, int> ekilenler = new Dictionary<CicekTuru, int>();
+    public int undoCezaPuani = 0;
 
     void Awake() 
     { 
@@ -48,4 +49,17 @@ public class LevelManager : MonoBehaviour
             UIManager.instance.ParsomeniGuncelle();
         }
     }
+  public int ToplamPuaniHesapla()
+{
+    int temelPuan = 0;
+    foreach (var tur in recete.Keys)
+    {
+        int kazanilan = Mathf.Min(ekilenler[tur], recete[tur]);
+        temelPuan += kazanilan * 10;
+    }
+
+    // Ceza puanını düşüyoruz ama puanın 0'ın altına inmesini engelliyoruz
+    int finalPuan = temelPuan - undoCezaPuani;
+    return Mathf.Max(0, finalPuan);
+}
 }
