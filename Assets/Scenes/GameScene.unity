@@ -654,6 +654,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -905,6 +906,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -1756,6 +1758,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -2162,7 +2165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 135, y: 43.794983}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.47745377, y: 0.5}
 --- !u!1 &820165329
@@ -3168,12 +3171,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1143731633}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.44557, y: 0.77435, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2077287051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1272211876
 GameObject:
@@ -3911,6 +3914,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -4249,11 +4253,12 @@ RectTransform:
   - {fileID: 2087263004}
   - {fileID: 1439859878}
   - {fileID: 826955278}
+  - {fileID: 1545133548}
   m_Father: {fileID: 1689261067}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 709.4, y: 122}
+  m_AnchoredPosition: {x: 817, y: 103}
   m_SizeDelta: {x: 378.18, y: 474.37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1500385173
@@ -4273,8 +4278,8 @@ MonoBehaviour:
     m_Right: 10
     m_Top: 10
     m_Bottom: 0
-  m_ChildAlignment: 2
-  m_StartCorner: 1
+  m_ChildAlignment: 0
+  m_StartCorner: 0
   m_StartAxis: 1
   m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 70, y: 10}
@@ -4448,12 +4453,12 @@ RectTransform:
   m_Children:
   - {fileID: 965967354}
   - {fileID: 2111020375}
-  m_Father: {fileID: 1689261067}
+  m_Father: {fileID: 1500385172}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1628.49, y: -350.815}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1545133549
 MonoBehaviour:
@@ -4567,6 +4572,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -4763,7 +4769,6 @@ RectTransform:
   m_Children:
   - {fileID: 1673112308}
   - {fileID: 1500385172}
-  - {fileID: 1545133548}
   m_Father: {fileID: 1139238091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5440,6 +5445,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -5616,6 +5622,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -6079,7 +6086,8 @@ Transform:
   m_LocalPosition: {x: 3.44557, y: 0.77435, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1143731635}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2087263003
@@ -6307,6 +6315,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -6483,6 +6492,7 @@ MonoBehaviour:
   tirmiklanmisResim: {fileID: 3070943757145301465, guid: f268ae2390f5139439b3109547e11f16, type: 3}
   tohumluResim: {fileID: -656203777224299773, guid: e663e4682cb82654989f56ea8557ca15, type: 3}
   sulanmisResim: {fileID: 6006916627043437407, guid: 817ad114b71b6074a83efe277c10c6f1, type: 3}
+  fidanSprite: {fileID: 700477544129420980, guid: ac096758fe3e8e640905adf7b3b7b40a, type: 3}
   uzerindekiCicek: 6
   kirmiziCicekSprite: {fileID: -7070481499146384894, guid: 6eef55779927e2348bcd11b31a2e7770, type: 3}
   maviCicekSprite: {fileID: 4544707788177014793, guid: 433ab4a7472d0084c8596ec484bfe3b1, type: 3}
@@ -6536,5 +6546,4 @@ SceneRoots:
   - {fileID: 1139238091}
   - {fileID: 620279951}
   - {fileID: 1422606444}
-  - {fileID: 1143731635}
   - {fileID: 2077287051}

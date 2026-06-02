@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator GunesSurecAnimasoynu()
+  IEnumerator GunesSurecAnimasoynu()
     {
         seciliArac = AracTipi.Hicbiri; 
         if (gunesSurecSlider == null) yield break;
@@ -199,18 +199,23 @@ public class GameManager : MonoBehaviour
             float ilerlemeHizi = gecenSure / gunesSuresi;
             gunesSurecSlider.value = ilerlemeHizi; 
 
+            // Güneş barı %40 (0.4) seviyesine geldiğinde fidanları gösterelim
             if (!fidanOldu && ilerlemeHizi >= 0.4f)
             {
                 fidanOldu = true;
-                foreach (var t in tumTarlalar) t.BuyumeyiGoster(true); 
-                Debug.Log("Bitkiler fidan oldu.");
+                // DÜZELTME: Tüm tarlaları Fidan durumuna getiriyoruz
+                foreach (var t in tumTarlalar) t.FidanDurumunaGetir(); 
+                Debug.Log("<color=orange>Bitkiler fidan oldu.</color>");
             }
 
             yield return null; 
         }
 
-        gunesSurecSlider.value = 0.8f; 
-        foreach (var t in tumTarlalar) t.BuyumeyiGoster(false); 
+        // --- GÜNEŞ SÜRECİ BİTTİ (Bar Doldu) ---
+
+        // DÜZELTME 1: BuyumeyiGoster(false) yapan hatalı satırı sildik.
+        // DÜZELTME 2: Tüm tarlaları artık fidan aşamasından renkli çiçek aşamasına geçiriyoruz.
+        foreach (var t in tumTarlalar) t.CicekDurumunaGetir();
         
         Debug.Log("<color=green>Güneş süreci bitti! Hasat hazır.</color>");
 

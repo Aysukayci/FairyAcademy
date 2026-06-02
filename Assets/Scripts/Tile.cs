@@ -15,8 +15,11 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     public Sprite tohumluResim;
     public Sprite sulanmisResim;
 
-    [Header("Tohum Türü ve Çiçek Görselleri")]
+    [Header("Büyüme Görselleri")]
+    public Sprite fidanSprite; // Kilitli: Buraya genel fidan resmini sürükle
     public CicekTuru uzerindekiCicek = CicekTuru.Hicbiri;
+
+    [Header("Renkli Çiçek Görselleri")]
     public Sprite kirmiziCicekSprite;
     public Sprite maviCicekSprite;
     public Sprite yesilCicekSprite;
@@ -50,7 +53,7 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     {
         if (islemGordu || GameManager.instance == null) return;
 
-        // YENİ: Geri al butonunun çalışabilmesi için son etkileşime girilen tarlayı GameManager'a bildiriyoruz
+        // Geri al butonunun çalışabilmesi için son etkileşime girilen tarlayı GameManager'a bildiriyoruz
         GameManager.instance.SonHamleyiKaydet(this);
 
         var arac = GameManager.instance.seciliArac;
@@ -69,10 +72,9 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
                 // 1. Tarlanın hafızasına ektiğimiz çiçeği yazalım
                 uzerindekiCicek = GameManager.instance.seciliTohum;
 
-                // 2. Çiçek görselini hazırla
-                GorseliAyarla(uzerindekiCicek);
+                // NOT: Artık burada çiçek görselini ayarlamıyoruz, fidan olması için güneş sürecini bekliyoruz!
 
-                // 3. LevelManager ve UIManager'a haber ver, parşömendeki sayılar güncellensin
+                // 2. LevelManager ve UIManager'a haber ver, parşömendeki sayılar güncellensin
                 if (LevelManager.instance != null && UIManager.instance != null)
                 {
                     LevelManager.instance.ekilenler[uzerindekiCicek]++;
@@ -97,7 +99,7 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         }
     }
 
-    // YENİ: GameManager içerisinden "Geri Al" basıldığında bu tarlanın durumunu bir önceki aşamaya döndüren fonksiyon
+    // GameManager içerisinden "Geri Al" basıldığında bu tarlanın durumunu bir önceki aşamaya döndüren fonksiyon
     public void HamleyiGeriSar(GameManager.BahceAsamasi asama)
     {
         // Tarlanın işlem görme kilidini açıyoruz ve rengini normale döndürüyoruz
@@ -161,11 +163,22 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         EfektPatlat(); 
     }
 
-    private void GorseliAyarla(CicekTuru tur)
+    // YENİ: Güneş barı %40'a gelince sadece fidan görselini açar
+    public void FidanDurumunaGetir()
     {
-        if (cicekGorseli == null) return;
+        if (cicekGorseli == null || uzerindekiCicek == CicekTuru.Hicbiri) return;
+        
+        cicekGorseli.sprite = fidanSprite; // Genel fidan resmini koy
+        cicekGorseli.gameObject.SetActive(true); // Görseli aç
+    }
 
-        switch (tur)
+    // YENİ: Güneş barı dolunca fidanı asıl renkli çiçeğe dönüştürür
+    public void CicekDurumunaGetir()
+    {
+        if (cicekGorseli == null || uzerindekiCicek == CicekTuru.Hicbiri) return;
+
+        // Hafızadaki çiçek türüne göre asıl görseli ayarla
+        switch (uzerindekiCicek)
         {
             case CicekTuru.Kirmizi: cicekGorseli.sprite = kirmiziCicekSprite; break;
             case CicekTuru.Mavi: cicekGorseli.sprite = maviCicekSprite; break;
@@ -190,10 +203,8 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
         }
     }
 
-    public void BuyumeyiGoster(bool fidanMi)
-    {
-        if (cicekGorseli != null) cicekGorseli.gameObject.SetActive(true);
-    }
+    // Eski sistemden kalan bu fonksiyonu içi boş bırakıyoruz ki Unity diğer kodlarda hata vermesin
+    public void BuyumeyiGoster(bool fidanMi) { }
 
     public void EtkilesimeAc() { islemGordu = false; }
     public void EfektPatlat() { }
