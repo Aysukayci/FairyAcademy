@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -250,4 +251,10 @@ public class GameManager : MonoBehaviour
         
         if (LevelManager.instance != null) LevelManager.instance.ReceteyiOlustur();
     }
+    // Botanik sahnesindeki Geri butonuna basılınca Haritaya dönmeyi sağlar
+public void HaritayaGeriDon()
+{
+    // Harita sahnesinin adı "MapScene" olduğu için buraya birebir aynısını yazıyoruz
+    SceneManager.LoadScene("MapScene");
+}
 }

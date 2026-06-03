@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; // Sahneler arası geçiş için şart
 
 public class HaritaKontrol : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class HaritaKontrol : MonoBehaviour
     // Akademileri liste halinde tutacak kutu
     public AkademiKurulumu[] tumAkademiler;
 
+    [Header("Arayüz Panelleri")]
+    public GameObject dersSecmePaneli; // Sadece parşömen panelimiz kalıyor
+
     void Start()
     {
         PuanYukleVeGuncelle();
@@ -26,9 +30,8 @@ public class HaritaKontrol : MonoBehaviour
 
     public void PuanYukleVeGuncelle()
     {
-        // Oyuncunun puanını telefonun hafızasından çekiyoruz.
         toplamPuan = PlayerPrefs.GetInt("OyuncuPuani", 0);
-        Debug.Log("Güncel Toplam Puan: " + toplamPuan); // Konsolda puanı görmek için
+        Debug.Log("Güncel Toplam Puan: " + toplamPuan); 
 
         KilitDurumlariniGuncelle();
     }
@@ -37,41 +40,70 @@ public class HaritaKontrol : MonoBehaviour
     {
         foreach (var akademi in tumAkademiler)
         {
-            // GÜVENLİK DUVARI: Eğer Unity Inspector'da buton veya akademi boş bırakıldıysa pas geç, kodu dondurma!
             if (akademi == null || akademi.butonComponent == null) 
                 continue;
 
             if (toplamPuan >= akademi.gerekenPuan)
             {
-                // KİLİDİ AÇ:
                 if (akademi.kilitGorseli != null) 
-                    akademi.kilitGorseli.SetActive(false); // Dumanlı kilit görselini gizle
+                    akademi.kilitGorseli.SetActive(false); 
 
-                akademi.butonComponent.interactable = true; // Butona tıklanabilir yap
+                akademi.butonComponent.interactable = true; 
             }
             else
             {
-                // KİLİTLİ TUT:
                 if (akademi.kilitGorseli != null) 
-                    akademi.kilitGorseli.SetActive(true);  // Dumanlı kilit görselini göster
+                    akademi.kilitGorseli.SetActive(true);  
 
-                akademi.butonComponent.interactable = false; // Butona tıklanamaz yap
+                akademi.butonComponent.interactable = false; 
             }
         }
     }
 
-    // TEST AMAÇLI: Müfettiş (Inspector) panelinden puanı elinle değiştirip denemek istersen diye hile butonları
+    // Haritadaki açık olan bir akademi binasına tıklanınca parşömeni açar
+    public void PaneliAc()
+    {
+        if (dersSecmePaneli != null)
+        {
+            dersSecmePaneli.SetActive(true);
+        }
+    }
+
+    // Parşömendeki Geri butonuna tıklanınca parşömeni kapatır (Haritayı gösterir)
+    public void PaneliKapat()
+    {
+        Debug.Log("Parşömendeki Geri butonuna basıldı.");
+
+        if (dersSecmePaneli != null)
+        {
+            dersSecmePaneli.SetActive(false);
+            Debug.Log("Ders seçme paneli başarıyla kapatıldı.");
+        }
+        else
+        {
+            Debug.LogError("DİKKAT: 'Ders Secme Paneli' kutusu boş!");
+        }
+    }
+
+    // Botanik dersinin butonuna tıklanınca direkt oyun sahnesini yükler
+    public void BotanikOyununuAc()
+    {
+        Debug.Log("Botanik oyun sahnesi (GameScene) yükleniyor...");
+        SceneManager.LoadScene("GameScene"); 
+    }
+
+    // TEST AMAÇLI HİLE BUTONLARI
     [ContextMenu("Puanı 1000 Yap ve Test Et")]
     public void TestPuanVer1000()
     {
         PlayerPrefs.SetInt("OyuncuPuani", 1000);
-        PuanYukleVeGuncelle(); // Hafızayı doldur ve ekranı anında tazele
+        PuanYukleVeGuncelle(); 
     }
 
     [ContextMenu("Puanı Sıfırla (0 Yap)")]
     public void TestPuanSifirla()
     {
         PlayerPrefs.SetInt("OyuncuPuani", 0);
-        PuanYukleVeGuncelle(); // Hafızayı sıfırla ve ekranı anında tazele
+        PuanYukleVeGuncelle(); 
     }
 }
