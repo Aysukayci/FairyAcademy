@@ -8,8 +8,6 @@ public class UIManager : MonoBehaviour
     [Header("Bitiş Ekranı ve Puanlama")]
     public GameObject bitisPaneli;
     public TextMeshProUGUI txtBaslik; // "Tebrikler" veya "Başarısız" yazacak
-    public TextMeshProUGUI txtFinalPuan;
-
     [Header("Yıldız Görselleri (Dolu Olanlar)")]
     public GameObject yildiz1; 
     public GameObject yildiz2; 
@@ -29,40 +27,63 @@ public class UIManager : MonoBehaviour
 
     void Awake() { if (instance == null) instance = this; }
 
-    public void BitisEkraniniGoster(int kazanilanPuan)
+   public void BitisEkraniniGoster(int kazanilanPuan)
     {
         if (bitisPaneli != null) bitisPaneli.SetActive(true);
         if (gamePanel != null) gamePanel.SetActive(false);
         if (aracPaneli != null) aracPaneli.SetActive(false);
 
-        if (txtFinalPuan != null) txtFinalPuan.text = "Puan: " + kazanilanPuan;
+        // --- PUAN KAYDETME SİSTEMİ ---
+        // Oyuncu 0'dan büyük bir puan aldıysa (bölümü başarıyla bitirdiyse) hafızaya ekle
+        if (kazanilanPuan > 0) 
+        {
+            // 1. Önce hafızadaki eski toplam puanı çekiyoruz
+            int eskiToplam = PlayerPrefs.GetInt("ToplamPuan", 0);
+            
+            // 2. Yeni kazanılan puanı eski puanın üzerine ekliyoruz
+            int yeniToplam = eskiToplam + kazanilanPuan;
+            
+            // 3. Yeni toplamı kalıcı olarak hafızaya yazıp kaydediyoruz
+            PlayerPrefs.SetInt("ToplamPuan", yeniToplam);
+            PlayerPrefs.Save(); 
+            
+            Debug.Log("<color=cyan>FairyAcademy: Puan başarıyla hafızaya yazıldı! Yeni Toplam: </color>" + yeniToplam);
+        }
 
         // Yıldızları önce temizle
-        yildiz1.SetActive(false); yildiz2.SetActive(false); yildiz3.SetActive(false);
+        if (yildiz1 != null) yildiz1.SetActive(false); 
+        if (yildiz2 != null) yildiz2.SetActive(false); 
+        if (yildiz3 != null) yildiz3.SetActive(false);
 
         // KALMA VE YILDIZ MEKANİZMASI
+        // Yıldızlar görünmeye başladığı an bu ses çalacak
+        if (SoundManager.instance != null && kazanilanPuan >= 30) 
+        {
+            SoundManager.instance.YildizSesi();
+        }
         if (kazanilanPuan >= 90) // 3 Yıldız
         {
-            txtBaslik.text = "MÜKEMMEL HASAT!";
-            yildiz1.SetActive(true); yildiz2.SetActive(true); yildiz3.SetActive(true);
+            if (txtBaslik != null) txtBaslik.text = "MÜKEMMEL HASAT!";
+            if (yildiz1 != null) yildiz1.SetActive(true); 
+            if (yildiz2 != null) yildiz2.SetActive(true); 
+            if (yildiz3 != null) yildiz3.SetActive(true);
         }
         else if (kazanilanPuan >= 60) // 2 Yıldız
         {
-            txtBaslik.text = "TEBRİKLER!";
-            yildiz1.SetActive(true); yildiz2.SetActive(true);
+            if (txtBaslik != null) txtBaslik.text = "TEBRİKLER!";
+            if (yildiz1 != null) yildiz1.SetActive(true); 
+            if (yildiz2 != null) yildiz2.SetActive(true);
         }
         else if (kazanilanPuan >= 30) // 1 Yıldız
         {
-            txtBaslik.text = "BAŞARDIN!";
-            yildiz1.SetActive(true);
+            if (txtBaslik != null) txtBaslik.text = "BAŞARDIN!";
+            if (yildiz1 != null) yildiz1.SetActive(true);
         }
         else // 30 Puan altı -> KALMA DURUMU
         {
-            txtBaslik.text = "BAŞARISIZ OLDUN!";
-            // Yıldızlar kapalı kalır
+            if (txtBaslik != null) txtBaslik.text = "BAŞARISIZ OLDUN!";
         }
     }
-
     public void ParsomeniGuncelle()
     {
         var lm = LevelManager.instance;

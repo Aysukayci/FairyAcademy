@@ -25,10 +25,10 @@ public class GameManager : MonoBehaviour
     private int tarladakiIslemSayisi = 0;
 
     [Header("Geri Al (Undo) Mekanizması")]
-    public Tile sonEtkilesimdekiTarla; // Oyuncunun dokunduğu son tarla kutusu
-    private int kullanilanGeriAlSayisi = 0; // Kaç kez geri al butonuna basıldı
-    private int undoCezaPuani = 0; // Toplamda düşülecek ceza puanı
-    private const int BEDAVA_GERI_AL_LIMITI = 1; // 1 kullanım hakkı bedava, sonrakiler ceza keser
+    public Tile sonEtkilesimdekiTarla; 
+    private int kullanilanGeriAlSayisi = 0; 
+    private int undoCezaPuani = 0; 
+    private const int BEDAVA_GERI_AL_LIMITI = 1; 
 
     [Header("Büyülü Dalga Prefab (Fairy Trail)")]
     public ParticleSystem periTozuTrailPrefab; 
@@ -46,16 +46,22 @@ public class GameManager : MonoBehaviour
         Debug.Log("<color=cyan>Oyun Başladı!</color>");
         
         if (bitisEkraniPaneli != null) bitisEkraniPaneli.SetActive(false); 
-        
         if (gunesSurecSlider != null) gunesSurecSlider.gameObject.SetActive(false); 
     }
 
     public void TarlayiListeyeEkle(Tile tarla) { if (!tumTarlalar.Contains(tarla)) tumTarlalar.Add(tarla); }
 
-    public void TirmikSec() { if (mevcutAsama == BahceAsamasi.TirmikAsamasi) seciliArac = AracTipi.Tirmik; }
+    // --- BUTON SESLERİ DOĞRUDAN FONKSİYONLARIN İÇİNE EKLENDİ ---
+
+    public void TirmikSec() 
+    { 
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
+        if (mevcutAsama == BahceAsamasi.TirmikAsamasi) seciliArac = AracTipi.Tirmik; 
+    }
     
     public void TohumSec(int tohumIndeksi) 
     { 
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
         if (mevcutAsama == BahceAsamasi.TohumAsamasi) 
         {
             seciliArac = AracTipi.Tohum; 
@@ -64,19 +70,39 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void SuSec() { if (mevcutAsama == BahceAsamasi.SuAsamasi) seciliArac = AracTipi.Su; }
+    public void SuSec() 
+    { 
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
+        if (mevcutAsama == BahceAsamasi.SuAsamasi) seciliArac = AracTipi.Su; 
+    }
     
-    public void GunesSec() { if (mevcutAsama == BahceAsamasi.GunesAsamasi) StartCoroutine(GunesSurecAnimasoynu()); } 
+    public void GunesSec() 
+    { 
+        if (mevcutAsama == BahceAsamasi.GunesAsamasi) 
+        {
+            StartCoroutine(GunesSurecAnimasoynu()); 
+            if (SoundManager.instance != null) SoundManager.instance.GunesSesi();
+        } 
+    } 
     
-    public void HasatSec() { if (mevcutAsama == BahceAsamasi.HasatAsamasi) seciliArac = AracTipi.Hasat; }
+    public void HasatSec() 
+    { 
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
+        if (mevcutAsama == BahceAsamasi.HasatAsamasi) seciliArac = AracTipi.Hasat; 
+    }
 
     public void TarlayaTiklandi()
     {
-        // Eğer hasat aşamasındaysak, her tıklamada hasat edilen tarla sayısını artır
-        if (mevcutAsama == BahceAsamasi.HasatAsamasi)
+        // Tarlaya işlem uygulandığında çıkacak oyun içi efekt sesleri
+        if (SoundManager.instance != null)
         {
-            tarladakiIslemSayisi++;
+            if (mevcutAsama == BahceAsamasi.TirmikAsamasi) SoundManager.instance.TirmikSesi();
+            else if (mevcutAsama == BahceAsamasi.TohumAsamasi) SoundManager.instance.TohumSesi();
+            else if (mevcutAsama == BahceAsamasi.SuAsamasi) SoundManager.instance.SuSesi(); 
+            else if (mevcutAsama == BahceAsamasi.HasatAsamasi) SoundManager.instance.HasatSesi();
         }
+
+        if (mevcutAsama == BahceAsamasi.HasatAsamasi) tarladakiIslemSayisi++;
 
         tiklananTarlaSayisi++;
         if (tiklananTarlaSayisi >= tumTarlalar.Count) 
@@ -85,55 +111,43 @@ public class GameManager : MonoBehaviour
             StartCoroutine(GercekPeriTozuDalgasi());
         }
 
-        // Hasat bittiğinde çalışacak kısım
         if (mevcutAsama == BahceAsamasi.HasatAsamasi && tarladakiIslemSayisi >= toplamTarlaSayisi)
         {
             OyunBitti();
         }
     }
 
-    // Tile.cs içerisinden son tıklanan tarlayı bu fonksiyonla kaydedeceğiz
-    public void SonHamleyiKaydet(Tile tarla)
-    {
-        sonEtkilesimdekiTarla = tarla;
-    }
+    public void SonHamleyiKaydet(Tile tarla) { sonEtkilesimdekiTarla = tarla; }
 
-    // Sahnede oluşturacağın Geri Al butonuna bu fonksiyonu bağlayacaksın
     public void HamleyiGeriAl()
     {
         if (sonEtkilesimdekiTarla == null) return;
-
-        // Güneş animasyonu sırasında veya Hasat bittikten sonra geri alma yapılamasın
         if (mevcutAsama == BahceAsamasi.GunesAsamasi || mevcutAsama == BahceAsamasi.HasatAsamasi) return;
 
-        // Tarlanın kendi içindeki görsel ve veri durumunu bir önceki aşamaya sarıyoruz
         sonEtkilesimdekiTarla.HamleyiGeriSar(mevcutAsama);
+        
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
 
-        // Fazladan tıklama sayacını düşüyoruz ki peri tozu dalgası erken tetiklenmesin
         if (tiklananTarlaSayisi > 0) tiklananTarlaSayisi--;
-
         kullanilanGeriAlSayisi++;
 
-        // Eğer bedava geri alma limiti (1) aşılırsa her geri al işleminde skordan 10 puan düşer
         if (kullanilanGeriAlSayisi > BEDAVA_GERI_AL_LIMITI)
         {
             undoCezaPuani += 10;
-            Debug.Log("<color=red>Geri Al Cezası! Güncel Kesinti: </color>" + undoCezaPuani);
+            if (SoundManager.instance != null) SoundManager.instance.HataSesi();
         }
 
-        // Aynı hamlenin üst üste mükerrer geri alınmasını engellemek için hafızayı temizle
         sonEtkilesimdekiTarla = null;
     }
 
     public void OyunBitti()
     {
         int hamPuan = LevelManager.instance.ToplamPuaniHesapla();
-        
-        // Geri almalardan gelen cezayı nihai puandan düşüyoruz (0'ın altına inemez)
         int nihaiPuan = Mathf.Max(0, hamPuan - undoCezaPuani);
-        
-        // UIManager'a nihai puanı gönderiyoruz, yıldızları o hesaplayıp gösterecek
         UIManager.instance.BitisEkraniniGoster(nihaiPuan);
+        
+        // Bölüm başarıyla bittiğinde tebrik/yıldız sesi
+        if (SoundManager.instance != null) SoundManager.instance.YildizSesi();
     }
 
     private IEnumerator GercekPeriTozuDalgasi()
@@ -142,7 +156,6 @@ public class GameManager : MonoBehaviour
 
         ParticleSystem periTozu = Instantiate(periTozuTrailPrefab, tumTarlalar[0].transform.position, Quaternion.identity);
         periTozu.Play();
-
         float hareketHizi = 15f; 
 
         for (int i = 0; i < tumTarlalar.Count; i++)
@@ -155,13 +168,11 @@ public class GameManager : MonoBehaviour
                 periTozu.transform.position = Vector3.MoveTowards(periTozu.transform.position, hedefKonum, hareketHizi * Time.deltaTime);
                 yield return null; 
             }
-
             hedefTarla.DalgaUlasti(); 
         }
 
         periTozu.Stop();
         Destroy(periTozu.gameObject, 2f); 
-
         tiklananTarlaSayisi = 0; 
         AsamaGecisiniYap();
     }
@@ -181,16 +192,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-  IEnumerator GunesSurecAnimasoynu()
+    IEnumerator GunesSurecAnimasoynu()
     {
         seciliArac = AracTipi.Hicbiri; 
         if (gunesSurecSlider == null) yield break;
 
-        Debug.Log("<color=yellow>Güneş süreci başladı!</color>");
-        
         gunesSurecSlider.gameObject.SetActive(true);
         gunesSurecSlider.value = 0;
-
         float gecenSure = 0;
         bool fidanOldu = false;
 
@@ -200,26 +208,15 @@ public class GameManager : MonoBehaviour
             float ilerlemeHizi = gecenSure / gunesSuresi;
             gunesSurecSlider.value = ilerlemeHizi; 
 
-            // Güneş barı %40 (0.4) seviyesine geldiğinde fidanları gösterelim
             if (!fidanOldu && ilerlemeHizi >= 0.4f)
             {
                 fidanOldu = true;
-                // DÜZELTME: Tüm tarlaları Fidan durumuna getiriyoruz
                 foreach (var t in tumTarlalar) t.FidanDurumunaGetir(); 
-                Debug.Log("<color=orange>Bitkiler fidan oldu.</color>");
             }
-
             yield return null; 
         }
 
-        // --- GÜNEŞ SÜRECİ BİTTİ (Bar Doldu) ---
-
-        // DÜZELTME 1: BuyumeyiGoster(false) yapan hatalı satırı sildik.
-        // DÜZELTME 2: Tüm tarlaları artık fidan aşamasından renkli çiçek aşamasına geçiriyoruz.
         foreach (var t in tumTarlalar) t.CicekDurumunaGetir();
-        
-        Debug.Log("<color=green>Güneş süreci bitti! Hasat hazır.</color>");
-
         yield return new WaitForSeconds(1.0f); 
 
         gunesSurecSlider.gameObject.SetActive(false); 
@@ -229,21 +226,20 @@ public class GameManager : MonoBehaviour
 
     public void OyunuYenidenBaslat()
     {
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
+
         if (bitisEkraniPaneli != null) bitisEkraniPaneli.SetActive(false);
-        
         if (UIManager.instance != null)
         {
             if (UIManager.instance.gamePanel != null) UIManager.instance.gamePanel.SetActive(true);
             if (UIManager.instance.aracPaneli != null) UIManager.instance.aracPaneli.SetActive(true);
         }
 
-        // Yeni tura başlarken tüm durumları ve cezaları sıfırlıyoruz
         tiklananTarlaSayisi = 0;
         tarladakiIslemSayisi = 0; 
         undoCezaPuani = 0;
         kullanilanGeriAlSayisi = 0;
         sonEtkilesimdekiTarla = null;
-
         seciliArac = AracTipi.Hicbiri; 
         seciliTohum = CicekTuru.Hicbiri;
         mevcutAsama = BahceAsamasi.TirmikAsamasi; 
@@ -251,10 +247,13 @@ public class GameManager : MonoBehaviour
         
         if (LevelManager.instance != null) LevelManager.instance.ReceteyiOlustur();
     }
-    // Botanik sahnesindeki Geri butonuna basılınca Haritaya dönmeyi sağlar
-public void HaritayaGeriDon()
-{
-    // Harita sahnesinin adı "MapScene" olduğu için buraya birebir aynısını yazıyoruz
-    SceneManager.LoadScene("MapScene");
-}
+
+    public void DerslereDon()
+    {
+        if (SoundManager.instance != null) SoundManager.instance.ButonSesi();
+
+        PlayerPrefs.SetInt("DersPaneliniAc", 1);
+        PlayerPrefs.Save(); 
+        SceneManager.LoadScene("MapScene");
+    }
 }

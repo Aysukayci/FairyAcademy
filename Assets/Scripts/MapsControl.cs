@@ -3,9 +3,10 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; // Sahneler arası geçiş için şart
 
 public class HaritaKontrol : MonoBehaviour
-{
-    // Oyuncunun mini oyundan kazandığı ve telefona kaydedilen toplam puanı
-    private int toplamPuan; 
+{   
+    [Header("Harita Puan Sistemi")]
+    public TMPro.TextMeshProUGUI txtToplamPuan;
+    private int toplamPuan; // Hafızadan yüklenen güncel toplam puan
 
     // Unity editöründen her binanın kilit görselini ve butonunu buraya sürükleyeceğiz
     [System.Serializable]
@@ -25,16 +26,38 @@ public class HaritaKontrol : MonoBehaviour
 
     void Start()
     {
+        // 1. Önce puanı yükle ve arayüzü güncelle
         PuanYukleVeGuncelle();
+
+        // 2. Hafızada botanikten dönüş notu var mı kontrol et
+        if (PlayerPrefs.GetInt("DersPaneliniAc", 0) == 1)
+        {
+            if (dersSecmePaneli != null)
+            {
+                dersSecmePaneli.SetActive(true);
+                Debug.Log("Ders seçim paneli açıldı.");
+            }
+
+            // Notu temizle
+            PlayerPrefs.SetInt("DersPaneliniAc", 0);
+            PlayerPrefs.Save();
+        }
     }
 
     public void PuanYukleVeGuncelle()
-    {
-        toplamPuan = PlayerPrefs.GetInt("OyuncuPuani", 0);
-        Debug.Log("Güncel Toplam Puan: " + toplamPuan); 
+{
+    // Hafızadan toplam puanı oku
+    toplamPuan = PlayerPrefs.GetInt("ToplamPuan", 0);
 
-        KilitDurumlariniGuncelle();
+    // Ekrana SADECE sayıyı yazdır ("Puan: " kısmını sildik)
+    if (txtToplamPuan != null)
+    {
+        txtToplamPuan.text = toplamPuan.ToString();
     }
+
+    // Kilitleri kontrol et
+    KilitDurumlariniGuncelle();
+}
 
     void KilitDurumlariniGuncelle()
     {
@@ -43,6 +66,7 @@ public class HaritaKontrol : MonoBehaviour
             if (akademi == null || akademi.butonComponent == null) 
                 continue;
 
+            // Eğer oyuncunun puanı akademinin kilit puanına eşit veya büyükse kilidi aç
             if (toplamPuan >= akademi.gerekenPuan)
             {
                 if (akademi.kilitGorseli != null) 
@@ -92,18 +116,18 @@ public class HaritaKontrol : MonoBehaviour
         SceneManager.LoadScene("GameScene"); 
     }
 
-    // TEST AMAÇLI HİLE BUTONLARI
+    // TEST AMAÇLI HİLE BUTONLARI (Editörden sağ tıklayıp test edebilirsin)
     [ContextMenu("Puanı 1000 Yap ve Test Et")]
     public void TestPuanVer1000()
     {
-        PlayerPrefs.SetInt("OyuncuPuani", 1000);
+        PlayerPrefs.SetInt("ToplamPuan", 1000);
         PuanYukleVeGuncelle(); 
     }
 
     [ContextMenu("Puanı Sıfırla (0 Yap)")]
     public void TestPuanSifirla()
     {
-        PlayerPrefs.SetInt("OyuncuPuani", 0);
+        PlayerPrefs.SetInt("ToplamPuan", 0);
         PuanYukleVeGuncelle(); 
     }
 }
